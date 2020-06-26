@@ -1,0 +1,6 @@
+
+*/*.o
+*.o
+main.c
+a.out
+TODO

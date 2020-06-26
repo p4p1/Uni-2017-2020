@@ -1,0 +1,13 @@
+---
+kind: PersistantVolumeClaim
+apiVersion: v1
+metadata:
+  name: volumeclaim
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  hostPath: "/var/lib/postgresql/data"

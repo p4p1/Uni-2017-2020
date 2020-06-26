@@ -1,0 +1,91 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: f0e167ef347dd82c96108af538d572ca103cd71d21fc6ff19cb2e6a13c3f2f50
+
+name:           evalexpr
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/evalexpr#readme>
+homepage:       https://github.com/githubuser/evalexpr#readme
+bug-reports:    https://github.com/githubuser/evalexpr/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2019 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/evalexpr
+
+library
+  exposed-modules:
+      Lexer
+      Lib
+      Text.Parsec
+      Text.Parsec.ByteString
+      Text.Parsec.ByteString.Lazy
+      Text.Parsec.Char
+      Text.Parsec.Combinator
+      Text.Parsec.Error
+      Text.Parsec.Expr
+      Text.Parsec.Language
+      Text.Parsec.Perm
+      Text.Parsec.Pos
+      Text.Parsec.Prim
+      Text.Parsec.String
+      Text.Parsec.Text
+      Text.Parsec.Text.Lazy
+      Text.Parsec.Token
+      Text.ParserCombinators.Parsec
+      Text.ParserCombinators.Parsec.Char
+      Text.ParserCombinators.Parsec.Combinator
+      Text.ParserCombinators.Parsec.Error
+      Text.ParserCombinators.Parsec.Expr
+      Text.ParserCombinators.Parsec.Language
+      Text.ParserCombinators.Parsec.Perm
+      Text.ParserCombinators.Parsec.Pos
+      Text.ParserCombinators.Parsec.Prim
+      Text.ParserCombinators.Parsec.Token
+  other-modules:
+      Paths_evalexpr
+  hs-source-dirs:
+      src
+  build-depends:
+      mtl,
+      bytestring,
+      text,
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable evalexpr-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_evalexpr
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    ,  evalexpr
+  default-language: Haskell2010
+
+test-suite evalexpr-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_evalexpr
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , evalexpr
+  default-language: Haskell2010

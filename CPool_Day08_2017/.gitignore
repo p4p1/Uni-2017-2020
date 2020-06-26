@@ -1,0 +1,7 @@
+*.o
+*/*.o
+*.swp
+*/*.swp
+CPool_Day08_2017.h
+bin/
+main.c

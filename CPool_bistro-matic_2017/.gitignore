@@ -1,0 +1,11 @@
+*.o
+*/*.o
+*.swp
+*/*.swp
+*.gcda
+*/*.gcda
+*.gcno
+*/*.gcno
+tests/units
+a.out
+calc

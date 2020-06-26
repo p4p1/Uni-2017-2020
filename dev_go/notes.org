@@ -1,0 +1,17 @@
+#+TITLE: Notes
+
+* SQL_Day01
+** Misc commands
+- USE [db]; -> USE A database
+- SHOW DATABASES;  -> list all of the databases
+- SHOW TABLES; -> Voir les tables
+- DESCRIBE [table_name] -> Display table
+- ORDER BY [Col] -> sorting, asc || desc ( ascending || descending )
+- UPPER() -> upper case
+- AS RENAME sql COLUMN ex: SELECT UPPER(name) AS 'NAME OF ALL THE GENRES' FROM genres;
+- LIMIT [number] -> Limits the output to a certain amount of number
+- WHERE [dondition] STATEMENT [condition] -> STATEMENT(OR, AND) filter output from a condition
+- [INNER] JOIN -> matches values from 1 table to the other
+
+** TO SEARCH [1/1][100%]:
+- [X] ORDER BY

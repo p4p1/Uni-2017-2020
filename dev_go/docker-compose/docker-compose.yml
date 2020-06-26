@@ -1,0 +1,6 @@
+version: '3'
+services:
+    awesome_project:
+        build: ./project
+        ports:
+            - "1234:8080"

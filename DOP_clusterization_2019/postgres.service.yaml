@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes
+spec:
+  selector:
+    app: kubernetes
+  type: ContainerPort
+  ports:
+  - port: 5432
+    targetPort: 5432

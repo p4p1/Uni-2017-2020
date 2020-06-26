@@ -1,0 +1,127 @@
+B-CPE-210 stumper3
+
+Advanced tests
+
+  cesar:
+    Passed: 14.3 %
+    Crashed: 0.0 %
+
+
+Basic tests
+
+  cesar - Oral presentation - 1 test
+    Can go to oral presentation?: KO
+      Test failure: The output must match the regular expression '^OK$', but it was 'KO'
+  
+
+
+=== BUILD LOG ===
+
+make: Entering directory '/usr/local/bugs/delivery'
+gcc -Wall -Wextra -Werror -I./include -o srcs/main.o -c srcs/main.c
+gcc -Wall -Wextra -Werror -I./include -o srcs/cesar.o -c srcs/cesar.c
+make -C lib/my
+make[1]: Entering directory '/usr/local/bugs/delivery/lib/my'
+make[1]: Leaving directory '/usr/local/bugs/delivery/lib/my'
+gcc -Wall -Wextra -Werror -I./include -o cesar ./srcs/main.o ./srcs/cesar.o -L./lib -lmy
+make: Leaving directory '/usr/local/bugs/delivery'
+Build status: OK
+
+
+=== TEST LOGS ===
+
+====================
+ Crypt - Preliminaries
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Preliminaries: SUCCESS
+
+====================
+ Crypt - Crypt from string (positive key)
+====================
+
+# Executing all tests...
+# Test failed: invalid exit status. Got 1.
+
+Crypt - Crypt from string (positive key): FAILURE
+
+====================
+ Crypt - Crypt from string (negative key)
+====================
+
+# Executing all tests...
+# Test failed: invalid exit status. Got 1.
+
+Crypt - Crypt from string (negative key): FAILURE
+
+====================
+ Crypt - Crypt from file (positive key)
+====================
+
+# Executing all tests...
+# Test failed: invalid exit status. Got 1.
+
+Crypt - Crypt from file (positive key): FAILURE
+
+====================
+ Crypt - Crypt from file (negative key)
+====================
+
+# Executing all tests...
+# Test failed: invalid exit status. Got 1.
+
+Crypt - Crypt from file (negative key): FAILURE
+
+====================
+ Crypt - Output file is read-only
+====================
+
+# Executing all tests...
+# Got:
+wrwr
+OK
+# But expected:
+OK
+# Test failed: invalid output.
+
+Crypt - Output file is read-only: FAILURE
+
+====================
+ Crypt - Error handling
+====================
+
+# Executing all tests...
+# Got:
+0
+# But expected:
+84
+# Test failed: invalid output.
+
+Crypt - Error handling: FAILURE
+
+====================================
+Not enough tests passed to validate.
+Oral presentation not needed, sorry.
+You will do better next time!
+====================================
+
+
+=== CODING STYLE ===
+
+L3 rule has been violated 2 times: misplaced space(s)
+
+
+------------------------------------------------------------------------------
+                           GCC Code Coverage Report
+Directory: /tmp/tmp_delivery
+------------------------------------------------------------------------------
+File                                       Lines    Exec  Cover   Missing
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+TOTAL                                          0       0    --%
+------------------------------------------------------------------------------
+lines: 0.0% (0 out of 0)
+branches: 0.0% (0 out of 0)

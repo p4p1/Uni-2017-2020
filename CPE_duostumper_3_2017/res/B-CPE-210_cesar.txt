@@ -1,0 +1,65 @@
+B2 - Stumpers
+B-CPE-210
+
+Cesar
+Duo Stumper
+
+1.0
+
+Cesar
+binary name:
+repository name:
+repository rights:
+language:
+compilation:
+
+cesar
+CPE_duostumper_$STUMPERNUMBER_$ACADEMICYEAR
+ramassage-tek
+C
+via Makeﬁle, including re, clean and fclean rules
+
+• Your repository must contain the totality of your source files, but no useless files
+(binary, temp files, obj files,...).
+• Error messages have to be written on the error output, and the program should
+then exit with the 84 error code (0 if there is no error).
+
+The $STUMPERNUMBER is always on one digit: 1, 2, . . .
+
+For this project, the only authorized functions are those of the standard libC.
+
+The Cesar code is considered to be the oldest of substitution cipher algorithms, given that Julius Caesar used
+it.
+The technique is basic:
+all you have to do is replace each letter of the text to be encrypted with the letter that is located n places
+later in the alphabet (non-alphabetic characters don’t change).
+For example, if n is worth 3, A is replaced by D, B by E, C by F and so on.
+“HERE IS A SIMPLE EXAMPLE!” then becomes “KHUH LV D VLPSOH HADPSOH!” (with a key of 3).
+
+You must handle null, negative and positive keys.
+
+Write a program that takes a crypted file and a number as parameters, and that decrypts the content of the
+file using the Cesar code (with the number as key).
+
+1
+
+Use your program to decrypt the following message that contains more instructions:
+Myxqbkdevkdsyxc, iye cemmoonon sx nombizdsxq drsc wocckqo
+Dro bokv celtomd sc dy gbsdo k zbyqbkw dy oxmbizd k psvo yb
+cdbsxq kxn gbsdo dro bocevd sx k psvo xkwon ’mbizd’.
+Dy oxmbizd k psvo go gsvv eco dro ’-p’ zkbkwodob, pyb k cdbsxq go gsvv eco ’-c’.
+Csxmo sd sc k mbizdon psvo, xylyni cryevn lo klvo dy wynspi sdc myxdoxdc,
+drkd’c gri iyeb zbyqbkw cryevn cod dro bokn-yxvi bsqrdc dy dro ’mbizd’ psvo.
+Eckqo: ./mockb -p psvoxkwo uoi YB ./mockb -c "cdbsxq" uoi
+
+2
+
+Congratulations, you succeeded in decrypting this message
+The real subject is to write a program to encrypt a file or
+string and write the result in a file named ’crypt’.
+To encrypt a file we will use the ’-f’ parameter, for a string we will use ’-s’.
+Since it is a crypted file, nobody should be able to modify its contents,
+that’s why your program should set the read-only rights to the ’crypt’ file.
+Usage: ./cesar -f filename key OR ./cesar -s "string" key
+
+

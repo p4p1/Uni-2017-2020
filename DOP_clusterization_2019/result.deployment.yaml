@@ -1,0 +1,46 @@
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: result
+  namespace: default
+  labels:
+    app: my_app
+    my_app: result
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my_app
+      task: result
+  template:
+    metadata:
+      labels:
+        app: my_app
+        task: result
+      containers:
+      - name: my_app
+        image: epitechcontent/t-dop-600-result:k8s
+        env:
+        - name: POSTGRES_HOST
+          value: "re_host"
+        - name: POSTGRES_PORT
+          value: "pg_port"
+        - name: POSTGRES_DB
+          value: "pg_db"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgresDb
+              key: pg_user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgresDb
+              key: pg_pass
+        resources:
+          limits:
+            memory: 128Mi
+        ports:
+          - containerPort: 80
+      restartPolicy: Always

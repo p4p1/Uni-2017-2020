@@ -1,0 +1,7 @@
+*.o
+*/*.o
+*.swp
+*/*.swp
+CPool_match-nmatch_2017.h
+bin/
+tests/Makefile

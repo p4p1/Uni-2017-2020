@@ -1,0 +1,8 @@
+*/*.o
+*/*.swp
+*.swp
+*.o
+bin/
+tests/
+Makefile
+*.h

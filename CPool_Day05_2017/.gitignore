@@ -1,0 +1,12 @@
+*/*.o
+*.o
+*/*.swp
+*.swp
+*/*.gcno
+*.gcno
+*/*.gcda
+*.gcda
+bin/
+Makefile
+tests/Makefile
+tests/units

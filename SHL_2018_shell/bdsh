@@ -1,0 +1,368 @@
+#!/bin/bash
+
+FILE_NAME=""
+JSON_OUTPUT=0
+
+write_error() {
+	>&2 echo $1
+	exit 1
+}
+
+usage() {
+	echo -e "Usage: $0 [OPTION] ... [COMMAND] [REQUEST]"
+	echo -e "OPTION:"
+	echo -e "\t-h\t\t\tdisplay usage"
+	echo -e "\t-f FILE\t\t\tjson database file"
+	echo -e "\t-j\t\t\tjson formated output for select command"
+	echo
+	echo "COMMAND and REQUEST:"
+	echo -e "\tcreate\tcreate database"
+	echo -e "\t\t\tExemple:"
+	echo -e "\t\t\t\t$0 -f file.json create database"
+	echo -e "\t\t\t\t$0 -f file.json create table user id,firstname,lastname"
+	echo -e "\t\t\t\t$0 -f file.json create table age id,age"
+	echo
+	echo -e "\tinsert\tinsert data in database"
+	echo -e "\t\t\tExemple:"
+	echo -e "\t\t\t\t$0 -f file.json insert user id=1,firstname=John,lastname=SMITH"
+	echo -e "\t\t\t\t$0 -f file.json insert user id=4,firstname=Robert\\ John,lastname=WILLIAMS"
+	echo -e "\t\t\t\t$0 -f file.json insert user id=2,firstname=Lisa,lastname=SIMPSON"
+	echo -e "\t\t\t\t$0 -f file.json insert user id=10,lastname=SMITH"
+	echo -e "\t\t\t\t$0 -f file.json insert user firstname=Laura,lastname=SMITH"
+	echo -e "\t\t\t\t$0 -f file.json insert user id=9"
+	echo -e "\t\t\t\t$0 -f file.json insert age id=1,age=42"
+	echo
+	echo -e "\tdescribe\tdescribe table structure"
+	echo -e "\t\t\tExemple:"
+	echo -e "\t\t\t\t$0 -f file.json describe user"
+	echo -e "\t\t\t\tid"
+	echo -e "\t\t\t\tfirstname"
+	echo -e "\t\t\t\tlastname"
+	echo
+	echo -e "\tselect\tdisplay data from database"
+	echo -e "\t\t\tExemple:"
+	echo -e "\t\t\t\t$0 -f file.json select user firstname,lastname"
+	echo -e "\t\t\t\tfirstname    | lastname"
+	echo -e "\t\t\t\t-------------------------"
+	echo -e "\t\t\t\tJohn         | SMITH"
+	echo -e "\t\t\t\tRobert John  | WILLIAMS"
+	echo -e "\t\t\t\tLisa         | SIMPSON"
+	echo -e "\t\t\t\t             | SMITH"
+	echo -e "\t\t\t\tLaura        | SMITH"
+	echo -e "\t\t\t\t             | SMITH"
+	echo -e "\t\t\t\t$0 -f file.json select user lastname,firstname order"
+	echo -e "\t\t\t\tlastname  | firstname"
+	echo -e "\t\t\t\t-------------------------"
+	echo -e "\t\t\t\t          |"
+	echo -e "\t\t\t\tSIMPSON   | Lisa"
+	echo -e "\t\t\t\tSMITH     |"
+	echo -e "\t\t\t\tSMITH     | John"
+	echo -e "\t\t\t\tSMITH     | Laura"
+	echo -e "\t\t\t\tWILLAMS   | Robert John"
+}
+
+func_get_tables()
+{
+    grep -Pzo "(?<=\"desc_)[^\"]*(?=\"\s*:)" | tr "\0" "\n"
+}
+
+func_read_f()
+{
+    if [ ! -f $FILE_NAME ]; then
+        write_error "$FILE_NAME: is missing"
+    fi
+    cat "$FILE_NAME"
+}
+
+func_write_f()
+{
+    if [ ! -w $FILE_NAME ]; then
+        write_error "Cannot write in '$FILE_NAME'"
+    fi
+    cat > "$FILE_NAME"
+}
+
+func_create_table()
+{
+    local table_name="$5"
+    local json_f="$(func_read_f)"
+    local l_nbr=$(sed -n '$=' $FILE_NAME)
+    l_nbr=$( expr $l_nbr - 1)
+    if [ $l_nbr -gt 2 ]; then
+        sed -i ""$l_nbr"s/$/,/" $FILE_NAME
+    fi
+    json_f="$(func_read_f)"
+    if echo "$json_f" | func_get_tables | grep -qP "^$table_name$"; then
+        write_error "Table '$table_name' already exists"
+    fi
+    local table_params
+    mapfile -t table_params < <(echo "$6" | tr "," "\n")
+    for param in "${table_params[@]}"; do
+        if [ $({
+            for _param in "${table_params[@]}"; do
+                echo "$_param"
+            done
+            } | grep -c "^$param$") -ne 1 ]; then
+           write_error "'$param' specified twice"
+        fi
+    done
+    local tmp_f=$(echo "$json_f" | grep -Pzo "(?s)^.*(?=})" | tr "\0" "\n")
+
+    tmp_f="$tmp_f$(echo -e "\n  \"desc_$table_name\": [")"
+    for param in "${table_params[@]}"; do
+        tmp_f="$tmp_f$(echo -e "$sep\n    \"$param\"")"
+        local sep=","
+    done
+    tmp_f="$tmp_f$(echo -e "\n  ],\n  \"data_$table_name\": [\n  ]")"
+    tmp_f="$tmp_f$(echo -e "\n}")"
+
+    echo "$tmp_f" | func_write_f
+
+    local data_name=`sed -n '/  "data_/ {p;q}' $FILE_NAME`
+    local motif1="\"data_"
+    local motif2="\": \["
+    data_name=$(echo "$data_name" | sed -n "s/.*${motif1}\(.*\)${motif2}.*/\1/p")
+    var=`sed -n '/  "desc_'$table_name'":/,/],/ p' $FILE_NAME`
+    `sed -i '/  "desc_'$table_name'":/,/],/ d' $FILE_NAME`
+    local preprocessed_VAR=$(printf '%s\n' "$var" |
+    sed 's/\\/&&/g;s/^[[:blank:]]/\\&/;s/$/\\/')
+    sed -i "/  \"data_$data_name\": \[/i\\
+         ${preprocessed_VAR%?}" $FILE_NAME
+    `sed -i "s/^           \"desc_$table_name\": \[/  \"desc_$table_name\": \[/" $FILE_NAME`
+    exit 0
+}
+
+func_create() {
+    if [ -e $FILE_NAME ] && [ $4 == "database" ]; then
+        write_error "Database already exist when create database"
+    elif
+        [ $4 != "database" ] && [ $4 != "table" ]; then
+        write_error "Syntax error in command line (bad arguments, ...)"
+    elif [ ! -e $FILE_NAME ] && [ $4 == "database" ]; then
+        touch $FILE_NAME
+        echo -e "{\n}" >> $FILE_NAME
+    elif [ ! -e $FILE_NAME ] && [ $4 == "table" ]; then
+        write_error "$FILE_NAME: doesn't exist"
+    elif [ -e $FILE_NAME ] && [ $4 == "table" ]; then
+        func_create_table $@
+    fi
+    exit 0
+}
+
+func_get_param() {
+    local desc="$(grep -Pzo "\"desc_$1\"\s*:\s*\[\K[^\]]*(?=\s*\])" | tr -d "\0")"
+    echo "$desc" | grep -Pzo "(?<=\")[^\"]*(?=\"\s*(?:,|$))" | tr "\0" "\n"
+}
+
+func_insert() {
+
+    local table_name="$4"
+    local var_f="$(func_read_f)"
+
+    if ! echo "$var_f" | func_get_tables | grep -q "$table_name"; then
+        write_error "'$table_name': Is not in database"
+    fi
+    local name_param="$(echo "$var_f" | func_get_param "$table_name")"
+    local tab_param
+    mapfile -t tab_param < <(echo "$5" | tr "," "\n")
+    declare -A insert_values
+    for line in "${tab_param[@]}"; do
+        line="$(echo "$line" | cut -d "=" -f 1)"
+        if ! echo "$name_param" | grep -q "^$line$"; then
+            write_error "'$line': Is not in '$table_name'"
+        fi
+    done
+    for kv in "${tab_param[@]}"; do
+        local key="$(echo "$kv" | cut -d "=" -f 1)"
+        if [ -n "${insert_values[$key]}" ]; then
+            write_error "'$line' specified twice"
+        fi
+        insert_values[$key]="$(echo "$kv" | cut -d "=" -f 2-)"
+    done
+    local up_f="$(echo "$var_f" | grep -Pzo "(?s)^.*\"data_$table_name\"\s*:\s\[[^\]]*?(?=\s*\])" | tr "\0" "\n")"
+    local down_f="$(echo "$var_f" | grep -Pzo "(?s)^.*\"data_$table_name\"\s*:\s\[[^\]]*?\K\s*\].*$" | tr "\0" "\n")"
+    mapfile -t name_param < <(echo "$name_param")
+    up_f="$up_f$(echo -e "\n    {")"
+    local sep=""
+    for line in "${name_param[@]}"; do
+        up_f="$up_f$(echo -e "$sep\n      \"$line\": \"${insert_values[$line]}\"")"
+        sep=","
+    done
+    up_f="$up_f$(echo -e "\n    }")"
+    echo "$up_f$down_f" | func_write_f
+    exit 0
+}
+
+describe() {
+    if [ "$#" -eq 0 ]; then
+        >&2 echo "Error: Name of table to describe is missing."
+        exit 1
+    fi
+    if [ "$#" -ge 2 ]; then
+        >&2 echo "Error: Can describe only one table at a time."
+        exit 1
+    fi
+    info=$(sed -n "/\<"desc_"$1""\>/,/],*/ {
+        /".*desc.*"/n
+        /],*/ ! {
+            s/$//p
+      }
+    }" "$FILE_NAME")
+    if [ "$info" = "" ]; then
+        >&2 echo "Error: Table '$1' not found."
+        exit 1
+    fi
+    echo $info | tr " " "\n" | tr --delete '\",'
+    exit 0
+}
+
+func_select() {
+	no=0
+	declare -A ARRAY
+	if [ -z $FILE_NAME ] || [ ! -f $FILE_NAME ]; then
+		write_error "Database does not exist"
+	fi
+	SELECT_VAL=(${5//,/ })
+	for i in ${!SELECT_VAL[@]}; do
+		SELECT_VAL[$i]=${SELECT_VAL[i]//,}
+	done
+	for i in ${!SELECT_VAL[@]}; do
+		tmp_no=0
+		VALUE=$(cat $FILE_NAME | grep "\"${SELECT_VAL[i]}\" *:" | cut -d ":" -f 2)
+		readarray -t TMP_ARRAY <<< "$VALUE"
+		for j in ${!TMP_ARRAY[@]}; do
+			TMP_ARRAY[$j]=${TMP_ARRAY[$j]//\"}
+			TMP_ARRAY[$j]=${TMP_ARRAY[$j]//,}
+			ARRAY[$i,$j]=$(echo ${TMP_ARRAY[$j]} | tr -d "\r")
+		done
+		for j in ${!SELECT_VAL[@]}; do
+			if [ "${SELECT_VAL[j]}" == "${SELECT_VAL[-1]}" ]; then
+				tmp_no=$((tmp_no + $(printf "%s" "${ARRAY[$i,$j]}" | wc -c)))
+			else
+				tmp_no=$((tmp_no + $(printf "%-13s| " "${ARRAY[$i,$j]}" | wc -c)))
+			fi
+		done
+		if (( $tmp_no > $no )) ; then
+			no=$tmp_no
+		fi
+	done
+	# display area
+	for i in ${!SELECT_VAL[@]}; do
+		if [ "${SELECT_VAL[i]}" == "${SELECT_VAL[-1]}" ]; then
+			printf "%s" "${SELECT_VAL[i]}"
+		else
+			printf "%-13s| " "${SELECT_VAL[i]}"
+		fi
+	done
+	printf "\n"
+	for ((i = 0; i < $no + 2; i++)); do
+		printf "-"
+	done
+	printf "\n"
+	for i in ${!TMP_ARRAY[@]}; do
+		for j in ${!SELECT_VAL[@]}; do
+			if [ "${SELECT_VAL[j]}" == "${SELECT_VAL[-1]}" ]; then
+				printf "%s" "${ARRAY[$j,$i]}"
+			else
+				printf "%-13s| " "${ARRAY[$j,$i]}"
+			fi
+		done
+		printf "\n"
+	done
+	exit 0
+}
+
+##if [ -f .bdshrc ]; then
+#	FILE_NAME=$(cat .bdshrc)
+#fi
+
+#if [[ ! -z ${BDSH_FILE} ]] ; then
+#	FILE_NAME=$(echo $BDSH_FILE | cut -f2 -d"=")
+#fi
+
+case $1 in
+    -f)
+        ;;
+    -h)
+        ;;
+    *)
+        if [ -z "${BDSH_File}" ]; then
+            if [ -f ".bdshrc" ]; then
+                FILE_NAME=$(head -n 1 ".bdshrc")
+                check_file_extension
+            else
+                >&2 echo "Error: No filename was given in any way."
+                exit 1
+            fi
+        else
+            FILE_NAME=$BSDH_File
+        fi
+        ;;
+esac
+
+for (( i = 1; i <= $#; i++)); do
+	case ${!i} in
+		-f)
+			j=$((i+1))
+			FILE_NAME=${!j}
+			i=$((i + 1))
+			;;
+
+		-h)
+			usage
+            exit 0
+			;;
+
+		-j)
+			JSON_OUTPUT=1
+			;;
+
+		create)
+			if (( $JSON_OUTPUT )); then
+				shift
+			fi
+			func_create $@
+			;;
+
+		insert)
+			if (( $JSON_OUTPUT )); then
+				shift
+			fi
+			func_insert $@
+			;;
+
+		describe)
+			if (( $JSON_OUTPUT )); then
+				shift
+			fi
+            shift
+            shift
+            shift
+			describe $@
+			;;
+
+		select)
+			func_select $@
+			;;
+
+		*)
+			usage
+            exit 1
+			;;
+
+	esac
+done
+
+usage
+exit 1
+
+check_file_extension() {
+    re=".*.json"
+    if [[ $FILE_NAME =~ $re ]]; then
+        return
+    else
+        >&2 echo "Error: File requested is not a .json."
+        exit 1
+    fi
+}
+

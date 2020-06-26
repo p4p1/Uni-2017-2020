@@ -1,0 +1,7 @@
+*.o
+*/*.o
+*.swp
+*/*.swp
+CPool_Day07_2017.h
+bin/
+tests/units

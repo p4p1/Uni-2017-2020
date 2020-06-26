@@ -1,0 +1,8 @@
+*.o
+*/*.o
+*.swp
+*/*.swp
+CPool_Day09_2017.h
+bin/
+tests/Makefile
+main.c

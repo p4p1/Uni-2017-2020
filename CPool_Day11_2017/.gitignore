@@ -1,0 +1,13 @@
+*.o
+*/*.o
+*.swp
+*/*.swp
+*.gcda
+*/*.gcda
+*.gcno
+*/*.gcno
+CPool_Day11_2017.h
+bin/
+tests/units
+a.out
+main.c

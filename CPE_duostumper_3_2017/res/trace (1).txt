@@ -1,0 +1,118 @@
+B-CPE-210 stumper3
+
+Advanced tests
+
+  cesar:
+    Passed: 100.0 %
+    Crashed: 0.0 %
+
+
+Basic tests
+
+  cesar - Oral presentation - 1 test
+    Can go to oral presentation?: OK
+      PASSED
+  
+
+
+=== BUILD LOG ===
+
+make: Entering directory '/usr/local/bugs/delivery'
+gcc -g3 -Wall -Wextra -Werror -I./include -o srcs/main.o -c srcs/main.c
+gcc -g3 -Wall -Wextra -Werror -I./include -o srcs/cesar.o -c srcs/cesar.c
+gcc -g3 -Wall -Wextra -Werror -I./include -o srcs/file.o -c srcs/file.c
+make -C lib/my
+make[1]: Entering directory '/usr/local/bugs/delivery/lib/my'
+make[1]: Leaving directory '/usr/local/bugs/delivery/lib/my'
+gcc -g3 -Wall -Wextra -Werror -I./include -o cesar ./srcs/main.o ./srcs/cesar.o ./srcs/file.o -L./lib -lmy
+make: Leaving directory '/usr/local/bugs/delivery'
+Build status: OK
+
+
+=== TEST LOGS ===
+
+====================
+ Crypt - Preliminaries
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Preliminaries: SUCCESS
+
+====================
+ Crypt - Crypt from string (positive key)
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Crypt from string (positive key): SUCCESS
+
+====================
+ Crypt - Crypt from string (negative key)
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Crypt from string (negative key): SUCCESS
+
+====================
+ Crypt - Crypt from file (positive key)
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Crypt from file (positive key): SUCCESS
+
+====================
+ Crypt - Crypt from file (negative key)
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Crypt from file (negative key): SUCCESS
+
+====================
+ Crypt - Output file is read-only
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Output file is read-only: SUCCESS
+
+====================
+ Crypt - Error handling
+====================
+
+# Executing all tests...
+# OK
+
+Crypt - Error handling: SUCCESS
+
+=============================
+You passed enough tests.
+Go to the oral presentation !
+=============================
+
+
+=== CODING STYLE ===
+
+L3 rule has been violated 2 times: misplaced space(s)
+
+
+------------------------------------------------------------------------------
+                           GCC Code Coverage Report
+Directory: /tmp/tmp_delivery
+------------------------------------------------------------------------------
+File                                       Lines    Exec  Cover   Missing
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+TOTAL                                          0       0    --%
+------------------------------------------------------------------------------
+lines: 0.0% (0 out of 0)
+branches: 0.0% (0 out of 0)
