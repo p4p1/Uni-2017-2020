@@ -9,6 +9,7 @@
 #define LIB_MY_H_
 
 #include "my_printf.h"
+#include "get_next_line.h"
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -18,7 +19,6 @@
 
 void my_putchar(char);
 void my_swap(int *, int *);
-void my_memset(void *, int, unsigned int);
 int my_putnbr_base(int, char const *);
 int my_put_nbr(int);
 int my_showstr(char const *);
@@ -32,15 +32,15 @@ int my_strlen(char const *);
 int is_digit(char);
 int is_char(char);
 int my_atoi(const char *);
+char *my_itoa(int);
 char *my_revstr(char *);
-char *my_strncat(char *, char const *, int);
 char *my_strcat(char *, char const *);
+char *my_strncat(char *, char const *, int);
 char *my_strcpy(char *, char const *);
 char *my_strncpy(char *, char const *, int);
 char *my_strstr(char *, char const *);
 char *my_strdup(char const *);
-char *my_strdup_ln(char const *, int);
+char *my_strndup(char const *, int);
 char *my_strcapitalize(char *);
-
 
 #endif

@@ -7,31 +7,21 @@
 
 #include "my.h"
 
-static int scan_no(char *str, int i)
-{
-	int	nb = 0;
-
-	while (str[i] != '\0' && str[i] >= '0' && str[i] <= '9') {
-		nb = (nb + (str[i] - '0')) * 10;
-		i = i + 1;
-	}
-	return (nb);
-}
-
 int my_getnbr(char *str)
 {
-	int	nb = 0;
-	int	i = 0;
-	int	flag = 0;
+	long long int	no = 0;
+	int		neg = 1;
 
-	if (my_strcmp("2147483647", str) == 0)
-		return (2147483647);
-	if (my_strcmp("-2147483648", str) == 0)
-		return (-2147483648);
-	if (str == 0)
-		return (-1);
-	if (str[i] == '-')
-		flag = 1;
-	nb = scan_no(str, i);
-	return ((flag == 1) ? ((0 - nb) / 10) : (nb / 10));
+	if (*str == '-')
+		neg = ',' - *str++;
+	while (*str != '\0') {
+		if (*str <= '9' && *str >= '0') {
+			no = (*str - '0') + (no * 10);
+		} else {
+			break;
+		}
+		str++;
+	}
+	no *= neg;
+	return (no);
 }

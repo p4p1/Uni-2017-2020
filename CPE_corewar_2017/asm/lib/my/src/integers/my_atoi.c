@@ -5,7 +5,7 @@
 ** <..>
 */
 
-#include <stdio.h>
+#include "my.h"
 
 int my_atoi(const char *nptr)
 {
@@ -23,7 +23,5 @@ int my_atoi(const char *nptr)
 		nptr++;
 	}
 	no *= neg;
-	if (no > 2147483647 || no < -2147483648)
-		return (0);
 	return (no);
 }

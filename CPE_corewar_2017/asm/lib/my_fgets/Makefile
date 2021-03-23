@@ -12,10 +12,10 @@ FLAGS=	-g3 -Wall -Wextra -I./include
 
 NAME=	libmy_fgets.a
 
-INCLUDE_DIR=	./include
+INCLUDE_DIR=	$(realpath ./include)
 INCLUDE=		$(INCLUDE_DIR)/my_fgets.h
 
-SRC_DIR=	./srcs
+SRC_DIR=	$(realpath ./srcs)
 SRC=		$(SRC_DIR)/my_fgets.c                              \
 			$(SRC_DIR)/my_getchar.c                            \
 

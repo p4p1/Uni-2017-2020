@@ -14,7 +14,7 @@ char *my_revstr(char *str)
 	char	i = 0;
 
 	if (str == 0)
-		return(0);
+		return (0);
 	while (*(str + len) != '\0')
 		len++;
 	len--;

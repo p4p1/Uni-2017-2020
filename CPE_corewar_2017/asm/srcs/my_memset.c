@@ -1,11 +1,11 @@
 /*
 ** EPITECH PROJECT, 2017
-** my_memset.c
+** current-file-name
 ** File description:
 ** <..>
 */
 
-#include "my.h"
+#include "corewar.h"
 
 void my_memset(void *tab, int place, unsigned int size)
 {

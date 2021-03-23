@@ -12,10 +12,10 @@ FLAGS=	-Wall -Wextra -I./include
 
 NAME=	libmy_getopt.a
 
-INCLUDE_DIR=	./include
+INCLUDE_DIR=	$(realpath ./include)
 INCLUDE=		$(INCLUDE_DIR)/my_getopt.h
 
-SRC_DIR=	./src
+SRC_DIR=	$(realpath ./src)
 SRC=		$(SRC_DIR)/my_getopt.c                              \
 			$(SRC_DIR)/scan.c                                   \
 			$(SRC_DIR)/flag.c                                   \

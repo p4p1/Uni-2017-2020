@@ -11,7 +11,7 @@ static int pnb_bas_nolen(char const *base)
 {
 	int	len = 0;
 
-	while(*(base + len) != '\0')
+	while (*(base + len) != '\0')
 		len++;
 	return (len);
 }

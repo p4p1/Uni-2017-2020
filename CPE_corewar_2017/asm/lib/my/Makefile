@@ -12,11 +12,12 @@ FLAGS=	-Wall -Wextra -I./include
 
 NAME=	libmy.a
 
-INCLUDE_DIR=	./include
-INCLUDE=		$(INCLUDE_DIR)/my.h                   \
-				$(INCLUDE_DIR)/my_printf.h
+INCLUDE_DIR=	$(realpath ./include)
+INCLUDE=		$(INCLUDE_DIR)/my.h                            \
+				$(INCLUDE_DIR)/my_printf.h                     \
+				$(INCLUDE_DIR)/get_next_line.h
 
-SRC_DIR=	./src
+SRC_DIR=	$(realpath ./src)
 SRC=		$(SRC_DIR)/integers/number_len.c                   \
 			$(SRC_DIR)/integers/get_digit.c                    \
 			$(SRC_DIR)/integers/my_swap.c                      \
@@ -26,7 +27,6 @@ SRC=		$(SRC_DIR)/integers/number_len.c                   \
 			$(SRC_DIR)/nbr/my_put_nbr.c                        \
 			$(SRC_DIR)/nbr/my_putnbr_base.c                    \
 			$(SRC_DIR)/str/my_putstr.c                         \
-			$(SRC_DIR)/str/my_memset.c                         \
 			$(SRC_DIR)/str/my_revstr.c                         \
 			$(SRC_DIR)/str/my_showstr.c                        \
 			$(SRC_DIR)/str/my_strcapitalize.c                  \
@@ -34,15 +34,16 @@ SRC=		$(SRC_DIR)/integers/number_len.c                   \
 			$(SRC_DIR)/str/my_strcmp.c                         \
 			$(SRC_DIR)/str/my_strcpy.c                         \
 			$(SRC_DIR)/str/my_strdup.c                         \
-			$(SRC_DIR)/str/my_strdup_ln.c                      \
+			$(SRC_DIR)/str/my_strndup.c                        \
 			$(SRC_DIR)/str/my_strlen.c                         \
 			$(SRC_DIR)/str/my_strncat.c                        \
-			$(SRC_DIR)/str/my_strcat.c                         \
 			$(SRC_DIR)/str/my_strncmp.c                        \
 			$(SRC_DIR)/str/my_strncpy.c                        \
 			$(SRC_DIR)/str/my_strstr.c                         \
 			$(SRC_DIR)/char/is_char.c                          \
 			$(SRC_DIR)/char/my_putchar.c                       \
+			$(SRC_DIR)/char/get_next_line.c                    \
+			$(SRC_DIR)/char/itoa.c                             \
 			$(SRC_DIR)/my_printf/my_printf.c                   \
 			$(SRC_DIR)/my_printf/my_printf_flag.c              \
 			$(SRC_DIR)/my_printf/my_printf_usigned.c           \
